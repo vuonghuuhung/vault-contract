@@ -1,0 +1,22 @@
+diff --git a/node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol b/node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol
+index ed01013..cf6fd37 100644
+--- a/node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol
++++ b/node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol
+@@ -87,6 +87,17 @@ abstract contract ERC20Upgradeable is Initializable, ContextUpgradeable, IERC20,
+         return $._symbol;
+     }
+ 
++    /**
++     * @dev Sets {decimals} to a value other than the default one of 18.
++     *
++     * WARNING: This function should only be called from the constructor. Most
++     * applications that interact with token contracts will not expect
++     * {decimals} to ever change, and may work incorrectly if it does.
++     */
++    function _setupDecimals(uint8 decimals_) internal virtual {
++        _decimals = decimals_;
++    }
++
+     /**
+      * @dev Returns the number of decimals used to get its user representation.
+      * For example, if `decimals` equals `2`, a balance of `505` tokens should
