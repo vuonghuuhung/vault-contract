@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract OwnableWhitelist is Ownable {
     mapping(address => bool) public whitelist;
 
-    constructor(address initOwner) Ownable(initOwner) {}
+    constructor() Ownable(msg.sender) {}
 
     modifier onlyWhitelisted() {
         require(whitelist[msg.sender], "not allowed");
