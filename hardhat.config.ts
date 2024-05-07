@@ -23,7 +23,7 @@ const config: HardhatUserConfig = {
         mnemonic: keys.mnemonic,
       },
       forking: {
-        url: "https://eth-mainnet.alchemyapi.io/v2/" + keys.alchemyKeyMainnet,
+        url: "https://eth-mainnet.g.alchemy.com/v2/" + keys.alchemyKeyMainnet,
         blockNumber: 13984950, 
       },
     },
