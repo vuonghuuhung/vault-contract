@@ -1,6 +1,8 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 
+import keys from './dev-keys.json';
+
 const config: HardhatUserConfig = {
   solidity: {
     compilers: [
@@ -16,7 +18,15 @@ const config: HardhatUserConfig = {
     ]
   },
   networks: {
-    hardhat: {},
+    hardhat: {
+      accounts: {
+        mnemonic: keys.mnemonic,
+      },
+      forking: {
+        url: "https://eth-mainnet.alchemyapi.io/v2/" + keys.alchemyKeyMainnet,
+        blockNumber: 13984950, 
+      },
+    },
   }
 };
 
