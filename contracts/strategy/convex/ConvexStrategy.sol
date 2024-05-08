@@ -97,7 +97,7 @@ contract ConvexStrategy is BaseUpgradeableStrategy {
         address _curveDeposit,
         uint256 _nTokens,
         bool _metaPool
-    ) public initializer {
+    ) public onlyInitializing {
         BaseUpgradeableStrategy.initialize(
             _storage,
             _underlying,

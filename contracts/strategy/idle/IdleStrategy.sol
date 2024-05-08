@@ -89,7 +89,7 @@ contract IdleStrategy is BaseUpgradeableStrategy {
         address _rewardToken,
         address _referral,
         bool _protected
-    ) public initializer {
+    ) public onlyInitializing {
         BaseUpgradeableStrategy.initialize(
             _storage,
             _underlying,

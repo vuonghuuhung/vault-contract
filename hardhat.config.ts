@@ -1,5 +1,9 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+import "@nomicfoundation/hardhat-network-helpers";
+import "@nomicfoundation/hardhat-ethers";
+import "@nomicfoundation/hardhat-verify";
+import "hardhat-tracer"
 
 import keys from './dev-keys.json';
 
@@ -24,7 +28,7 @@ const config: HardhatUserConfig = {
       },
       forking: {
         url: "https://eth-mainnet.g.alchemy.com/v2/" + keys.alchemyKeyMainnet,
-        blockNumber: 13984950, 
+        blockNumber: 19819900,
       },
     },
   }

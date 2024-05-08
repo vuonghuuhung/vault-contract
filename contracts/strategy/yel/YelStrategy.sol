@@ -38,7 +38,7 @@ contract YelStrategy is BaseUpgradeableStrategy {
         address _rewardPool,
         address _rewardToken,
         uint256 _poolID
-    ) public initializer {
+    ) public onlyInitializing() {
         BaseUpgradeableStrategy.initialize(
             _storage,
             _underlying,

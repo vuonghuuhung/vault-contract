@@ -57,7 +57,7 @@ contract BaseUpgradeableStrategy is
         address _rewardPool,
         address _rewardToken,
         address _strategist
-    ) public initializer {
+    ) public onlyInitializing {
         ControllableInit.initialize(_storage);
         _setUnderlying(_underlying);
         _setVault(_vault);

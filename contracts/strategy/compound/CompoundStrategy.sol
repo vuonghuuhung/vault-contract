@@ -45,7 +45,7 @@ contract CompoundStrategy is BaseUpgradeableStrategy {
         address _market,
         address _rewardPool,
         address _rewardToken
-    ) public initializer {
+    ) public onlyInitializing {
         BaseUpgradeableStrategy.initialize(
             _storage,
             _underlying,

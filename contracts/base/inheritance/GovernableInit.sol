@@ -19,10 +19,10 @@ contract GovernableInit is ReentrancyGuardUpgradeable {
     }
 
     constructor() {
-        __ReentrancyGuard_init();
     }
 
     function initialize(address _store) public virtual onlyInitializing {
+        __ReentrancyGuard_init();
         _setStorage(_store);
     }
 
