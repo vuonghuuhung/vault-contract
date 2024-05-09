@@ -31,6 +31,9 @@ const config: HardhatUserConfig = {
         blockNumber: 19819900,
       },
     },
+  },
+  mocha: {
+    timeout: 100000000,
   }
 };
 

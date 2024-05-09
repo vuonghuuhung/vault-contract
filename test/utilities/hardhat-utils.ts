@@ -7,6 +7,12 @@ import {
   Controller__factory,
   FeeRewardForwarder__factory,
   IERC20,
+  IdleStrategyMainnet_DAI,
+  IdleStrategyMainnet_DAI__factory,
+  IdleStrategyMainnet_USDC,
+  IdleStrategyMainnet_USDC__factory,
+  IdleStrategyMainnet_USDT,
+  IdleStrategyMainnet_USDT__factory,
   MegaFactory__factory,
   NotifyHelper__factory,
   OwnableWhitelist__factory,
@@ -99,7 +105,7 @@ const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
     storage.target,
     "fPool",
     "fPool",
-    18
+    await vault.decimals()
   );
 
   // TODO: fix hard code here
@@ -126,8 +132,6 @@ const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
     for (let i = 0; i < config.liquidation.length; i++) {
       const dex = Object.keys(config.liquidation[i])[0];
       const dexNameInBytes = ethers.keccak256(ethers.toUtf8Bytes(dex));
-      // console.log({ dexNameInBytes });
-      // console.log({ path: config.liquidation[i][dex] });
       await universalLiquidatorRegistry.setPath(
         dexNameInBytes,
         config.liquidation[i][dex]
@@ -150,7 +154,7 @@ const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
     }
   }
 
-  let strategy: CompoundStrategyMainnet_WETH | null = null;
+  let strategy: CompoundStrategyMainnet_WETH | IdleStrategyMainnet_DAI | IdleStrategyMainnet_USDC | IdleStrategyMainnet_USDT | null = null;
   if (config.strategyType == "compound") {
     const implementation = await new CompoundStrategyMainnet_WETH__factory(
       signer
@@ -159,6 +163,51 @@ const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
       implementation.target
     );
     strategy = CompoundStrategyMainnet_WETH__factory.connect(
+      strategyProxy.target.toString(),
+      signer
+    );
+    await strategy.initializeStrategy(...config.strategyArgs);
+    await vault.setStrategy(strategy.target);
+  } 
+  
+  if (config.strategyType == "idle-dai") {
+    const implementation = await new IdleStrategyMainnet_DAI__factory(
+      signer
+    ).deploy();
+    const strategyProxy = await new StrategyProxy__factory(signer).deploy(
+      implementation.target
+    );
+    strategy = IdleStrategyMainnet_DAI__factory.connect(
+      strategyProxy.target.toString(),
+      signer
+    );
+    await strategy.initializeStrategy(...config.strategyArgs);
+    await vault.setStrategy(strategy.target);
+  }
+
+  if (config.strategyType == "idle-usdc") {
+    const implementation = await new IdleStrategyMainnet_USDC__factory(
+      signer
+    ).deploy();
+    const strategyProxy = await new StrategyProxy__factory(signer).deploy(
+      implementation.target
+    );
+    strategy = IdleStrategyMainnet_USDC__factory.connect(
+      strategyProxy.target.toString(),
+      signer
+    );
+    await strategy.initializeStrategy(...config.strategyArgs);
+    await vault.setStrategy(strategy.target);
+  }
+
+  if (config.strategyType == "idle-usdt") {
+    const implementation = await new IdleStrategyMainnet_USDT__factory(
+      signer
+    ).deploy();
+    const strategyProxy = await new StrategyProxy__factory(signer).deploy(
+      implementation.target
+    );
+    strategy = IdleStrategyMainnet_USDT__factory.connect(
       strategyProxy.target.toString(),
       signer
     );
