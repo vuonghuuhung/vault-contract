@@ -13,6 +13,7 @@ import {
 import { BigNumberish } from "ethers";
 import { depositToVault, setUpCoreProtocol } from "../utilities/hardhat-utils";
 import { liquidations } from "../liquidation";
+import { BigDecimal } from "../../lib/bignumber";
 
 const ethers = hre.ethers;
 
@@ -95,37 +96,30 @@ describe("Mainnet Compound WETH", () => {
 
   describe("Happy path", () => {
     it("Farmer should earn money", async () => {
-      let farmerOldBalance = await underlying.balanceOf(farmer1.address);
+      let farmerOldBalance = new BigDecimal(ethers.formatEther(await underlying.balanceOf(farmer1.address)));
       await depositToVault(farmer1, underlying, vault, farmerBalance);
       let fTokenBalance = await vault.balanceOf(farmer1.address);
 
-      const hours = 10n;
-      const blocksPerHour = 2400n;
+      const hours = 10;
+      const blocksPerHour = 2400;
       let oldSharePrice;
       let newSharePrice;
-      for (let i = 0n; i < hours; i++) {
+      for (let i = 0; i < hours; i++) {
         console.log("loop ", i);
 
-        oldSharePrice = await vault.getPricePerFullShare();
+        oldSharePrice = new BigDecimal(ethers.formatEther(await vault.getPricePerFullShare()));
         await controller.connect(governance).doHardWork(vault.target);
-        newSharePrice = await vault.getPricePerFullShare();
+        newSharePrice = new BigDecimal(ethers.formatEther(await vault.getPricePerFullShare()));
 
-        console.log("old shareprice: ", ethers.formatEther(oldSharePrice));
-        console.log("new shareprice: ", ethers.formatEther(newSharePrice));
-        console.log("growth: ", newSharePrice / oldSharePrice);
+        console.log("old shareprice: ", oldSharePrice.toNumber());
+        console.log("new shareprice: ", newSharePrice.toNumber());
+        console.log("growth: ", newSharePrice.div(oldSharePrice).toNumber());
 
-        const apr =
-          (newSharePrice / oldSharePrice - 1n) *
-          (24n / (blocksPerHour / 300n)) *
-          365n;
-        const apy =
-          ((newSharePrice / oldSharePrice - 1n) *
-            (24n / (blocksPerHour / 300n)) +
-            1n) **
-          365n;
+        const apr = (newSharePrice.div(oldSharePrice).sub(1)).mul(24 / (blocksPerHour / 300)).mul(365);
+        const apy = ((newSharePrice.div(oldSharePrice).sub(1)).mul(24 / (blocksPerHour / 300)).add(1)).pow(365);
 
-        console.log("instant APR:", apr * 100n, "%");
-        console.log("instant APY:", (apy - 1n) * 100n, "%");
+        console.log("instant APR:", apr.mul(100).toNumber() > 0 ? apr.mul(100).toNumber() : 0, "%");
+        console.log("instant APY:", (apy.sub(1)).mul(100).toNumber() > 0 ? (apy.sub(1)).mul(100).toNumber() : 0, "%");
         await vault.connect(farmer1).withdraw(fTokenBalance / 10n);
         await depositToVault(
           farmer1,
@@ -137,21 +131,13 @@ describe("Mainnet Compound WETH", () => {
       }
       fTokenBalance = await vault.balanceOf(farmer1);
       await vault.connect(farmer1).withdraw(fTokenBalance);
-      let farmerNewBalance = await underlying.balanceOf(farmer1);
-
-      const apr =
-        (farmerNewBalance / farmerOldBalance - 1n) *
-        (24n / ((blocksPerHour * hours) / 300n)) *
-        365n;
-      const apy =
-        ((farmerNewBalance / farmerOldBalance - 1n) *
-          (24n / ((blocksPerHour * hours) / 300n)) +
-          1n) **
-        365n;
+      let farmerNewBalance = new BigDecimal(ethers.formatEther(await underlying.balanceOf(farmer1)));
+      const apr = (farmerNewBalance.div(farmerOldBalance).sub(1)).mul(24 / ((blocksPerHour * hours) / 300)).mul(365);
+      const apy = ((farmerNewBalance.div(farmerOldBalance).sub(1)).mul(24 / ((blocksPerHour * hours) / 300)).add(1)).pow(365);
 
       console.log("earned!");
-      console.log("Overall APR:", apr * 100n, "%");
-      console.log("Overall APY:", (apy - 1n) * 100n, "%");
+      console.log("Overall APR:", apr.mul(100).toNumber(), "%");
+      console.log("Overall APY:", (apy.sub(1)).mul(100).toNumber(), "%");
 
       await strategy.withdrawAllToVault({ from: governance }); // making sure can withdraw all for a next switch
     });
