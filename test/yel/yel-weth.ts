@@ -5,15 +5,10 @@ import {
   CompoundStrategyMainnet_WETH,
   CompoundStrategyMainnet_WETH__factory,
   Controller,
-  ConvexStrategyMainnet_3CRV,
-  ConvexStrategyMainnet_3CRV__factory,
-  ConvexStrategyMainnet_stETH_ng,
-  ConvexStrategyMainnet_stETH_ng__factory,
-  IBooster__factory,
   IERC20,
   IERC20__factory,
-  IdleStrategyMainnet_DAI,
-  IdleStrategyMainnet_DAI__factory,
+  YelStrategyMainnet_YEL_WETH,
+  YelStrategyMainnet_YEL_WETH__factory,
   VaultV1,
   VaultV2__factory,
 } from "../../typechain-types";
@@ -25,23 +20,19 @@ import { BigDecimal } from "../../lib/bignumber";
 const ethers = hre.ethers;
 
 const WETH = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
-const CRV = "0xD533a949740bb3306d119CC777fa900bA034cd52";
-const CVX = "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B";
-const USDC = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
-const WHALE = "0x9226ADf269B1869A2fe54Cabe1f72f6c01D996Fa";
+const YEL = "0x7815bDa662050D84718B988735218CFfd32f75ea";
+const WHALE = "0x3D42F3561c5bEfF78D3d2Bd08B2AC59F8d82C26A";
 const FARM = "0xa0246c9032bC3A600820415aE600c6388619A14D";
 const IFARM = "0x1571eD0bed4D987fe2b498DdBaE7DFA19519F651";
-const UNDERLYING = "0x21E27a5E5513D6e65C4f830167390997aA84843a";
+const UNDERLYING = "0xc83cE8612164eF7A13d17DDea4271DD8e8EEbE5d";
 
-describe("Mainnet Convex stETH-ng", () => {
+describe("Mainnet YEL-WETH", () => {
   let accounts: HardhatEthersSigner[];
 
   let underlying: IERC20;
 
   let underlyingWhale: HardhatEthersSigner;
-  let crv: IERC20;
-  let cvx: IERC20;
-  let usdc: IERC20
+  let yel: IERC20;
   let weth: IERC20;
 
   let governance: HardhatEthersSigner;
@@ -51,14 +42,12 @@ describe("Mainnet Convex stETH-ng", () => {
 
   let controller: Controller;
   let vault: VaultV1;
-  let strategy: ConvexStrategyMainnet_stETH_ng;
+  let strategy: YelStrategyMainnet_YEL_WETH;
 
   const setupExternalContracts = async () => {
     underlying = IERC20__factory.connect(UNDERLYING, accounts[10]);
     weth = IERC20__factory.connect(WETH, accounts[10]);
-    crv = IERC20__factory.connect(CRV, accounts[10]);
-    cvx = IERC20__factory.connect(CVX, accounts[10]);
-    usdc = IERC20__factory.connect(USDC, accounts[10]);
+    yel = IERC20__factory.connect(YEL, accounts[10]);
   };
 
   const setupBalance = async () => {
@@ -84,8 +73,8 @@ describe("Mainnet Convex stETH-ng", () => {
     const vaultImplementation = await new VaultV2__factory(governance).deploy();
 
     const strategyImplementation =
-      await new ConvexStrategyMainnet_stETH_ng__factory(governance).deploy();
-    
+      await new YelStrategyMainnet_YEL_WETH__factory(governance).deploy();
+
     const {
       controller: controllerContract,
       vault: vaultContract,
@@ -99,13 +88,13 @@ describe("Mainnet Convex stETH-ng", () => {
         WETHToken: WETH,
         liquidation: liquidations,
         strategyImplementation: strategyImplementation.target,
-        strategyType: "convex-steth-ng",
+        strategyType: "yel-weth",
       },
       governance
     );
     controller = controllerContract;
     vault = vaultContract;
-    strategy = strategyContract as ConvexStrategyMainnet_stETH_ng;
+    strategy = strategyContract as YelStrategyMainnet_YEL_WETH;
   });
 
   describe("Happy path", () => {

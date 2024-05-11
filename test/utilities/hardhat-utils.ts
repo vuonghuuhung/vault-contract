@@ -38,6 +38,8 @@ import {
   UniversalLiquidator__factory,
   UpgradableStrategyFactory__factory,
   VaultV1,
+  YelStrategyMainnet_YEL_WETH,
+  YelStrategyMainnet_YEL_WETH__factory,
 } from "../../typechain-types";
 import { BigNumberish } from "ethers";
 
@@ -169,8 +171,9 @@ const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
     | ConvexStrategyCvxCRVMainnet_cvxCRV
     | ConvexStrategyMainnet_OETH
     | ConvexStrategyMainnet_stETH_ng
+    | YelStrategyMainnet_YEL_WETH
     | null = null;
-    
+
   if (config.strategyType == "compound") {
     const implementation = await new CompoundStrategyMainnet_WETH__factory(
       signer
@@ -277,9 +280,8 @@ const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
   }
 
   if (config.strategyType == "convex-cvxcrv") {
-    const implementation = await new ConvexStrategyCvxCRVMainnet_cvxCRV__factory(
-      signer
-    ).deploy();
+    const implementation =
+      await new ConvexStrategyCvxCRVMainnet_cvxCRV__factory(signer).deploy();
     const strategyProxy = await new StrategyProxy__factory(signer).deploy(
       implementation.target
     );
@@ -317,6 +319,22 @@ const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
       strategyProxy.target.toString(),
       signer
     );
+    await strategy.initializeStrategy(...config.strategyArgs);
+    await vault.setStrategy(strategy.target);
+  }
+
+  if (config.strategyType == "yel-weth") {
+    const implementation = await new YelStrategyMainnet_YEL_WETH__factory(
+      signer
+    ).deploy();
+    const strategyProxy = await new StrategyProxy__factory(signer).deploy(
+      implementation.target
+    );
+    strategy = YelStrategyMainnet_YEL_WETH__factory.connect(
+      strategyProxy.target.toString(),
+      signer
+    );
+    // @ts-ignore // don't know why this throws error but still works
     await strategy.initializeStrategy(...config.strategyArgs);
     await vault.setStrategy(strategy.target);
   }
