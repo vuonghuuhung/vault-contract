@@ -56,7 +56,7 @@ contract ConvexStrategyCvxCRV is BaseUpgradeableStrategy {
         address _rewardPool,
         address _crvDeposit,
         address _cvxCrvSwap
-    ) public initializer {
+    ) public onlyInitializing {
         BaseUpgradeableStrategy.initialize(
             _storage,
             _underlying,

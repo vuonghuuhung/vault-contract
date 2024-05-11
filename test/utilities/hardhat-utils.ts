@@ -5,6 +5,18 @@ import {
   CompoundStrategyMainnet_WETH,
   CompoundStrategyMainnet_WETH__factory,
   Controller__factory,
+  ConvexStrategyCvxCRVMainnet_cvxCRV,
+  ConvexStrategyCvxCRVMainnet_cvxCRV__factory,
+  ConvexStrategyMainnet_3CRV,
+  ConvexStrategyMainnet_3CRV__factory,
+  ConvexStrategyMainnet_CVX_ETH,
+  ConvexStrategyMainnet_CVX_ETH__factory,
+  ConvexStrategyMainnet_OETH,
+  ConvexStrategyMainnet_OETH__factory,
+  ConvexStrategyMainnet_crvUSD_USDC,
+  ConvexStrategyMainnet_crvUSD_USDC__factory,
+  ConvexStrategyMainnet_stETH_ng,
+  ConvexStrategyMainnet_stETH_ng__factory,
   FeeRewardForwarder__factory,
   IERC20,
   IdleStrategyMainnet_DAI,
@@ -52,7 +64,7 @@ const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
   );
 
   const universalLiquidatorRegistry =
-    await new UniversalLiquidatorRegistry__factory(signer).deploy(); // TODO: add path
+    await new UniversalLiquidatorRegistry__factory(signer).deploy();
   // console.log({ universalLiquidatorRegistry });
   const feeRewardForwarder = await new FeeRewardForwarder__factory(
     signer
@@ -72,18 +84,10 @@ const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
   );
   const universalLiquidator = await new UniversalLiquidator__factory(
     signer
-  ).deploy(); // TODO: set path registry
+  ).deploy();
 
   await universalLiquidator.setPathRegistry(universalLiquidatorRegistry.target);
 
-  // console.log({
-  //   storage,
-  //   vault,
-  //   feeRewardForwarder,
-  //   notifyHelper,
-  //   rewardForwarder,
-  //   universalLiquidator,
-  // });
   const controller = await new Controller__factory(signer).deploy(
     storage.target,
     config.WETHToken,
@@ -154,7 +158,19 @@ const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
     }
   }
 
-  let strategy: CompoundStrategyMainnet_WETH | IdleStrategyMainnet_DAI | IdleStrategyMainnet_USDC | IdleStrategyMainnet_USDT | null = null;
+  let strategy:
+    | CompoundStrategyMainnet_WETH
+    | IdleStrategyMainnet_DAI
+    | IdleStrategyMainnet_USDC
+    | IdleStrategyMainnet_USDT
+    | ConvexStrategyMainnet_3CRV
+    | ConvexStrategyMainnet_crvUSD_USDC
+    | ConvexStrategyMainnet_CVX_ETH
+    | ConvexStrategyCvxCRVMainnet_cvxCRV
+    | ConvexStrategyMainnet_OETH
+    | ConvexStrategyMainnet_stETH_ng
+    | null = null;
+    
   if (config.strategyType == "compound") {
     const implementation = await new CompoundStrategyMainnet_WETH__factory(
       signer
@@ -168,8 +184,8 @@ const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
     );
     await strategy.initializeStrategy(...config.strategyArgs);
     await vault.setStrategy(strategy.target);
-  } 
-  
+  }
+
   if (config.strategyType == "idle-dai") {
     const implementation = await new IdleStrategyMainnet_DAI__factory(
       signer
@@ -208,6 +224,96 @@ const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
       implementation.target
     );
     strategy = IdleStrategyMainnet_USDT__factory.connect(
+      strategyProxy.target.toString(),
+      signer
+    );
+    await strategy.initializeStrategy(...config.strategyArgs);
+    await vault.setStrategy(strategy.target);
+  }
+
+  if (config.strategyType == "convex-3crv") {
+    const implementation = await new ConvexStrategyMainnet_3CRV__factory(
+      signer
+    ).deploy();
+    const strategyProxy = await new StrategyProxy__factory(signer).deploy(
+      implementation.target
+    );
+    strategy = ConvexStrategyMainnet_3CRV__factory.connect(
+      strategyProxy.target.toString(),
+      signer
+    );
+    await strategy.initializeStrategy(...config.strategyArgs);
+    await vault.setStrategy(strategy.target);
+  }
+
+  if (config.strategyType == "convex-crvusd-usdc") {
+    const implementation = await new ConvexStrategyMainnet_crvUSD_USDC__factory(
+      signer
+    ).deploy();
+    const strategyProxy = await new StrategyProxy__factory(signer).deploy(
+      implementation.target
+    );
+    strategy = ConvexStrategyMainnet_crvUSD_USDC__factory.connect(
+      strategyProxy.target.toString(),
+      signer
+    );
+    await strategy.initializeStrategy(...config.strategyArgs);
+    await vault.setStrategy(strategy.target);
+  }
+
+  if (config.strategyType == "convex-cvx-eth") {
+    const implementation = await new ConvexStrategyMainnet_CVX_ETH__factory(
+      signer
+    ).deploy();
+    const strategyProxy = await new StrategyProxy__factory(signer).deploy(
+      implementation.target
+    );
+    strategy = ConvexStrategyMainnet_CVX_ETH__factory.connect(
+      strategyProxy.target.toString(),
+      signer
+    );
+    await strategy.initializeStrategy(...config.strategyArgs);
+    await vault.setStrategy(strategy.target);
+  }
+
+  if (config.strategyType == "convex-cvxcrv") {
+    const implementation = await new ConvexStrategyCvxCRVMainnet_cvxCRV__factory(
+      signer
+    ).deploy();
+    const strategyProxy = await new StrategyProxy__factory(signer).deploy(
+      implementation.target
+    );
+    strategy = ConvexStrategyCvxCRVMainnet_cvxCRV__factory.connect(
+      strategyProxy.target.toString(),
+      signer
+    );
+    await strategy.initializeStrategy(...config.strategyArgs);
+    await vault.setStrategy(strategy.target);
+  }
+
+  if (config.strategyType == "convex-oeth") {
+    const implementation = await new ConvexStrategyMainnet_OETH__factory(
+      signer
+    ).deploy();
+    const strategyProxy = await new StrategyProxy__factory(signer).deploy(
+      implementation.target
+    );
+    strategy = ConvexStrategyMainnet_OETH__factory.connect(
+      strategyProxy.target.toString(),
+      signer
+    );
+    await strategy.initializeStrategy(...config.strategyArgs);
+    await vault.setStrategy(strategy.target);
+  }
+
+  if (config.strategyType == "convex-steth-ng") {
+    const implementation = await new ConvexStrategyMainnet_stETH_ng__factory(
+      signer
+    ).deploy();
+    const strategyProxy = await new StrategyProxy__factory(signer).deploy(
+      implementation.target
+    );
+    strategy = ConvexStrategyMainnet_stETH_ng__factory.connect(
       strategyProxy.target.toString(),
       signer
     );
