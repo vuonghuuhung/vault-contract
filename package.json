@@ -27,6 +27,7 @@
     "@types/node": "^20.12.9",
     "dotenv": "^16.4.5",
     "ethers": "^6.12.1",
+    "hardhat-ethernal": "^3.2.5",
     "hardhat-tracer": "^2.8.2",
     "patch-package": "^8.0.0",
     "typechain": "^8.3.2",

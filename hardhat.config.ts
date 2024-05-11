@@ -4,6 +4,7 @@ import "@nomicfoundation/hardhat-network-helpers";
 import "@nomicfoundation/hardhat-ethers";
 import "@nomicfoundation/hardhat-verify";
 import "hardhat-tracer"
+import "hardhat-ethernal";
 
 import keys from './dev-keys.json';
 
@@ -34,6 +35,10 @@ const config: HardhatUserConfig = {
   },
   mocha: {
     timeout: 100000000,
+  },
+  // @ts-ignore
+  ethernal: {
+    apiToken: keys.ethernalApiKey
   }
 };
 
