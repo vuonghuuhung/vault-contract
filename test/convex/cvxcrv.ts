@@ -33,7 +33,7 @@ const FARM = "0xa0246c9032bC3A600820415aE600c6388619A14D";
 const IFARM = "0x1571eD0bed4D987fe2b498DdBaE7DFA19519F651";
 const UNDERLYING = "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7";
 
-describe("Mainnet Convex CVX-ETH", () => {
+describe("Mainnet Convex CVX-CRV", () => {
   let accounts: HardhatEthersSigner[];
 
   let underlying: IERC20;

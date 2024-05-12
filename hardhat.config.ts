@@ -38,8 +38,29 @@ const config: HardhatUserConfig = {
   },
   // @ts-ignore
   ethernal: {
-    apiToken: keys.ethernalApiKey
+    apiToken: keys.ethernalApiKey,
+    resetOnStart: "Hardhat Local Network",
+    workspace: "Hardhat Local Network",
+    disableSync: false,
+    disableTrace: true,
+    skipFirstBlock: false,
+    verbose: true
   }
 };
+
+// export interface EthernalConfig {
+//   disableSync: boolean;
+//   disableTrace: boolean;
+//   workspace?: string;
+//   uploadAst: boolean;
+//   disabled: boolean;
+//   resetOnStart?: string;
+//   email?: string;
+//   password?: string;
+//   serverSync?: boolean;
+//   apiToken?: string;
+//   skipFirstBlock?: boolean;
+//   verbose?: boolean;
+// }
 
 export default config;

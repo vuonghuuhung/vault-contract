@@ -1,6 +1,6 @@
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 import helpers from "@nomicfoundation/hardhat-network-helpers";
-import hre from "hardhat";
+import hre, { config } from "hardhat";
 import {
   CompoundStrategyMainnet_WETH,
   CompoundStrategyMainnet_WETH__factory,
@@ -10,7 +10,7 @@ import {
   VaultV1,
   VaultV2__factory,
 } from "../../typechain-types";
-import { BigNumberish } from "ethers";
+import { BigNumberish, Mnemonic } from "ethers";
 import { depositToVault, setUpCoreProtocol } from "../utilities/hardhat-utils";
 import { liquidations } from "../liquidation";
 import { BigDecimal } from "../../lib/bignumber";
@@ -96,7 +96,9 @@ describe("Mainnet Compound WETH", () => {
 
   describe("Happy path", () => {
     it("Farmer should earn money", async () => {
-      let farmerOldBalance = new BigDecimal(ethers.formatEther(await underlying.balanceOf(farmer1.address)));
+      let farmerOldBalance = new BigDecimal(
+        ethers.formatEther(await underlying.balanceOf(farmer1.address))
+      );
       await depositToVault(farmer1, underlying, vault, farmerBalance);
       let fTokenBalance = await vault.balanceOf(farmer1.address);
 
@@ -107,19 +109,42 @@ describe("Mainnet Compound WETH", () => {
       for (let i = 0; i < hours; i++) {
         console.log("loop ", i);
 
-        oldSharePrice = new BigDecimal(ethers.formatEther(await vault.getPricePerFullShare()));
+        oldSharePrice = new BigDecimal(
+          ethers.formatEther(await vault.getPricePerFullShare())
+        );
         await controller.connect(governance).doHardWork(vault.target);
-        newSharePrice = new BigDecimal(ethers.formatEther(await vault.getPricePerFullShare()));
+        newSharePrice = new BigDecimal(
+          ethers.formatEther(await vault.getPricePerFullShare())
+        );
 
         console.log("old shareprice: ", oldSharePrice.toNumber());
         console.log("new shareprice: ", newSharePrice.toNumber());
         console.log("growth: ", newSharePrice.div(oldSharePrice).toNumber());
 
-        const apr = (newSharePrice.div(oldSharePrice).sub(1)).mul(24 / (blocksPerHour / 300)).mul(365);
-        const apy = ((newSharePrice.div(oldSharePrice).sub(1)).mul(24 / (blocksPerHour / 300)).add(1)).pow(365);
+        const apr = newSharePrice
+          .div(oldSharePrice)
+          .sub(1)
+          .mul(24 / (blocksPerHour / 300))
+          .mul(365);
+        const apy = newSharePrice
+          .div(oldSharePrice)
+          .sub(1)
+          .mul(24 / (blocksPerHour / 300))
+          .add(1)
+          .pow(365);
 
-        console.log("instant APR:", apr.mul(100).toNumber() > 0 ? apr.mul(100).toNumber() : 0, "%");
-        console.log("instant APY:", (apy.sub(1)).mul(100).toNumber() > 0 ? (apy.sub(1)).mul(100).toNumber() : 0, "%");
+        console.log(
+          "instant APR:",
+          apr.mul(100).toNumber() > 0 ? apr.mul(100).toNumber() : 0,
+          "%"
+        );
+        console.log(
+          "instant APY:",
+          apy.sub(1).mul(100).toNumber() > 0
+            ? apy.sub(1).mul(100).toNumber()
+            : 0,
+          "%"
+        );
         await vault.connect(farmer1).withdraw(fTokenBalance / 10n);
         await depositToVault(
           farmer1,
@@ -131,13 +156,24 @@ describe("Mainnet Compound WETH", () => {
       }
       fTokenBalance = await vault.balanceOf(farmer1);
       await vault.connect(farmer1).withdraw(fTokenBalance);
-      let farmerNewBalance = new BigDecimal(ethers.formatEther(await underlying.balanceOf(farmer1)));
-      const apr = (farmerNewBalance.div(farmerOldBalance).sub(1)).mul(24 / ((blocksPerHour * hours) / 300)).mul(365);
-      const apy = ((farmerNewBalance.div(farmerOldBalance).sub(1)).mul(24 / ((blocksPerHour * hours) / 300)).add(1)).pow(365);
+      let farmerNewBalance = new BigDecimal(
+        ethers.formatEther(await underlying.balanceOf(farmer1))
+      );
+      const apr = farmerNewBalance
+        .div(farmerOldBalance)
+        .sub(1)
+        .mul(24 / ((blocksPerHour * hours) / 300))
+        .mul(365);
+      const apy = farmerNewBalance
+        .div(farmerOldBalance)
+        .sub(1)
+        .mul(24 / ((blocksPerHour * hours) / 300))
+        .add(1)
+        .pow(365);
 
       console.log("earned!");
       console.log("Overall APR:", apr.mul(100).toNumber(), "%");
-      console.log("Overall APY:", (apy.sub(1)).mul(100).toNumber(), "%");
+      console.log("Overall APY:", apy.sub(1).mul(100).toNumber(), "%");
 
       await strategy.withdrawAllToVault({ from: governance }); // making sure can withdraw all for a next switch
     });
