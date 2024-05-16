@@ -1,10 +1,8 @@
 import { ethers } from "hardhat";
-import hre from "hardhat"
 import {
   Controller__factory,
   FeeRewardForwarder__factory,
   NotifyHelper__factory,
-  PotPool__factory,
   RewardForwarder__factory,
   Storage__factory,
   UniversalLiquidatorRegistry__factory,
@@ -94,7 +92,6 @@ export const prepareManager = async () => {
       const dexNameInBytes = ethers.keccak256(ethers.toUtf8Bytes(dex));
       await universalLiquidatorRegistry.setPath(
         dexNameInBytes,
-        // @ts-ignore
         liquidations[i][dex]
       );
     }

@@ -46,14 +46,14 @@ import { BigNumberish } from "ethers";
 const impersonate = async (
   addresses: string[]
 ): Promise<HardhatEthersSigner[]> => {
-  let signers: HardhatEthersSigner[] = [];
-  for (let address of addresses) {
+  const signers: HardhatEthersSigner[] = [];
+  for (const address of addresses) {
     signers.push(await hre.ethers.getImpersonatedSigner(address));
   }
   return signers;
 };
 
-const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
+const setUpCoreProtocol = async (config, signer: HardhatEthersSigner) => {
   const storage = await new Storage__factory(signer).deploy();
   const vaultImplementation = config.vaultImplementation;
   const vault = await makeVault(
@@ -334,7 +334,7 @@ const setUpCoreProtocol = async (config: any, signer: HardhatEthersSigner) => {
       strategyProxy.target.toString(),
       signer
     );
-    // @ts-ignore // don't know why this throws error but still works
+    // @ts-expect-error ts-migrate(2554) FIXME: do not know why error.
     await strategy.initializeStrategy(...config.strategyArgs);
     await vault.setStrategy(strategy.target);
   }

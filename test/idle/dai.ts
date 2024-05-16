@@ -1,9 +1,6 @@
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
-import helpers from "@nomicfoundation/hardhat-network-helpers";
 import hre from "hardhat";
 import {
-  CompoundStrategyMainnet_WETH,
-  CompoundStrategyMainnet_WETH__factory,
   Controller,
   IERC20,
   IERC20__factory,
@@ -21,7 +18,6 @@ const ethers = hre.ethers;
 
 const WETH = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
 const DAI = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
-const IDLE = "0x3fE7940616e5Bc47b0775a0dccf6237893353bB4";
 const WHALE = "0x47ac0Fb4F2D84898e4D9E7b4DaB3C24507a6D503";
 const FARM = "0xa0246c9032bC3A600820415aE600c6388619A14D";
 const IFARM = "0x1571eD0bed4D987fe2b498DdBaE7DFA19519F651";
@@ -32,9 +28,6 @@ describe("Mainnet Idle DAI", () => {
   let underlying: IERC20;
 
   let underlyingWhale: HardhatEthersSigner;
-  let dai: IERC20;
-  let idle: IERC20;
-  let weth: IERC20;
 
   let governance: HardhatEthersSigner;
   let farmer1: HardhatEthersSigner;
@@ -47,9 +40,6 @@ describe("Mainnet Idle DAI", () => {
 
   const setupExternalContracts = async () => {
     underlying = IERC20__factory.connect(DAI, accounts[10]);
-    weth = IERC20__factory.connect(WETH, accounts[10]);
-    dai = IERC20__factory.connect(DAI, accounts[10]);
-    idle = IERC20__factory.connect(IDLE, accounts[10]);
   };
 
   const setupBalance = async () => {
@@ -101,7 +91,7 @@ describe("Mainnet Idle DAI", () => {
 
   describe("Happy path", () => {
     it("Farmer should earn money", async () => {
-      let farmerOldBalance = new BigDecimal(ethers.formatEther(await underlying.balanceOf(farmer1.address)));
+      const farmerOldBalance = new BigDecimal(ethers.formatEther(await underlying.balanceOf(farmer1.address)));
       await depositToVault(farmer1, underlying, vault, farmerBalance);
       let fTokenBalance = await vault.balanceOf(farmer1.address);
 
@@ -136,7 +126,7 @@ describe("Mainnet Idle DAI", () => {
       }
       fTokenBalance = await vault.balanceOf(farmer1);
       await vault.connect(farmer1).withdraw(fTokenBalance);
-      let farmerNewBalance = new BigDecimal(ethers.formatEther(await underlying.balanceOf(farmer1)));
+      const farmerNewBalance = new BigDecimal(ethers.formatEther(await underlying.balanceOf(farmer1)));
       const apr = (farmerNewBalance.div(farmerOldBalance).sub(1)).mul(24 / ((blocksPerHour * hours) / 300)).mul(365);
       const apy = ((farmerNewBalance.div(farmerOldBalance).sub(1)).mul(24 / ((blocksPerHour * hours) / 300)).add(1)).pow(365);
 

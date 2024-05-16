@@ -1,6 +1,5 @@
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
-import helpers from "@nomicfoundation/hardhat-network-helpers";
-import hre, { config } from "hardhat";
+import hre from "hardhat";
 import {
   CompoundStrategyMainnet_WETH,
   CompoundStrategyMainnet_WETH__factory,
@@ -10,7 +9,7 @@ import {
   VaultV1,
   VaultV2__factory,
 } from "../../typechain-types";
-import { BigNumberish, Mnemonic } from "ethers";
+import { BigNumberish } from "ethers";
 import { depositToVault, setUpCoreProtocol } from "../utilities/hardhat-utils";
 import { liquidations } from "../liquidation";
 import { BigDecimal } from "../../lib/bignumber";
@@ -18,7 +17,6 @@ import { BigDecimal } from "../../lib/bignumber";
 const ethers = hre.ethers;
 
 const WETH = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
-const COMP = "0xc00e94Cb662C3520282E6f5717214004A7f26888";
 const WHALE = "0x8EB8a3b98659Cce290402893d0123abb75E3ab28";
 const FARM = "0xa0246c9032bC3A600820415aE600c6388619A14D";
 const IFARM = "0x1571eD0bed4D987fe2b498DdBaE7DFA19519F651";
@@ -29,8 +27,6 @@ describe("Mainnet Compound WETH", () => {
   let underlying: IERC20;
 
   let underlyingWhale: HardhatEthersSigner;
-  let weth: IERC20;
-  let comp: IERC20;
 
   let governance: HardhatEthersSigner;
   let farmer1: HardhatEthersSigner;
@@ -43,8 +39,6 @@ describe("Mainnet Compound WETH", () => {
 
   const setupExternalContracts = async () => {
     underlying = IERC20__factory.connect(WETH, accounts[10]);
-    weth = IERC20__factory.connect(WETH, accounts[10]);
-    comp = IERC20__factory.connect(COMP, accounts[10]);
   };
 
   const setupBalance = async () => {
@@ -96,7 +90,7 @@ describe("Mainnet Compound WETH", () => {
 
   describe("Happy path", () => {
     it("Farmer should earn money", async () => {
-      let farmerOldBalance = new BigDecimal(
+      const farmerOldBalance = new BigDecimal(
         ethers.formatEther(await underlying.balanceOf(farmer1.address))
       );
       await depositToVault(farmer1, underlying, vault, farmerBalance);
@@ -156,7 +150,7 @@ describe("Mainnet Compound WETH", () => {
       }
       fTokenBalance = await vault.balanceOf(farmer1);
       await vault.connect(farmer1).withdraw(fTokenBalance);
-      let farmerNewBalance = new BigDecimal(
+      const farmerNewBalance = new BigDecimal(
         ethers.formatEther(await underlying.balanceOf(farmer1))
       );
       const apr = farmerNewBalance

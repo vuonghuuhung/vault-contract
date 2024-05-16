@@ -1,13 +1,17 @@
-# Sample Hardhat Project
+# EVM Base Vault for managing decentralized assets
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+Remember to create a dev-keys.json having needed infomation in hardhat.config.ts
 
-Try running some of the following tasks:
-
+- For testing
 ```shell
-npx hardhat help
 npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.ts
+
+```
+
+- For running hardhat network forked from mainnet
+```shell
+npm install
+npm run blockchain
+npm run deployments
+
 ```

@@ -1,5 +1,5 @@
 import hre from "hardhat";
-import { ERC20__factory, IERC20__factory } from "../typechain-types";
+import { ERC20__factory } from "../typechain-types";
 import config from "./fork-mainnet-config";
 
 const ethers = hre.ethers;

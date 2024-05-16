@@ -1,4 +1,3 @@
-import hre from "hardhat";
 import {
   Reader__factory,
   VaultV2__factory,
@@ -8,8 +7,6 @@ import { exit } from "process";
 import { prepareManager } from "./controller";
 import { prepareFactory } from "./factories";
 import { prepareVault } from "./vault";
-
-const ethers = hre.ethers;
 
 async function main() {
   console.log("Forking mainnet and starting deploy");

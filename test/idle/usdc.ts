@@ -18,7 +18,6 @@ const ethers = hre.ethers;
 
 const WETH = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
 const USDC = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
-const IDLE = "0x3fE7940616e5Bc47b0775a0dccf6237893353bB4";
 const WHALE = "0x4B16c5dE96EB2117bBE5fd171E4d203624B014aa";
 const FARM = "0xa0246c9032bC3A600820415aE600c6388619A14D";
 const IFARM = "0x1571eD0bed4D987fe2b498DdBaE7DFA19519F651";
@@ -30,8 +29,6 @@ describe("Mainnet Idle USDC", () => {
 
   let underlyingWhale: HardhatEthersSigner;
   let usdc: IERC20;
-  let idle: IERC20;
-  let weth: IERC20;
 
   let governance: HardhatEthersSigner;
   let farmer1: HardhatEthersSigner;
@@ -44,9 +41,7 @@ describe("Mainnet Idle USDC", () => {
 
   const setupExternalContracts = async () => {
     underlying = IERC20__factory.connect(USDC, accounts[10]);
-    weth = IERC20__factory.connect(WETH, accounts[10]);
     usdc = IERC20__factory.connect(USDC, accounts[10]);
-    idle = IERC20__factory.connect(IDLE, accounts[10]);
   };
 
   const setupBalance = async () => {
@@ -98,7 +93,7 @@ describe("Mainnet Idle USDC", () => {
 
   describe("Happy path", () => {
     it("Farmer should earn money", async () => {
-      let farmerOldBalance = new BigDecimal(ethers.formatUnits(await underlying.balanceOf(farmer1.address), 6));
+      const farmerOldBalance = new BigDecimal(ethers.formatUnits(await underlying.balanceOf(farmer1.address), 6));
       await depositToVault(farmer1, underlying, vault, farmerBalance);
       let fTokenBalance = await vault.balanceOf(farmer1.address);
 
@@ -134,7 +129,7 @@ describe("Mainnet Idle USDC", () => {
       }
       fTokenBalance = await vault.balanceOf(farmer1);
       await vault.connect(farmer1).withdraw(fTokenBalance);
-      let farmerNewBalance = new BigDecimal(ethers.formatUnits(await underlying.balanceOf(farmer1), 6));
+      const farmerNewBalance = new BigDecimal(ethers.formatUnits(await underlying.balanceOf(farmer1), 6));
       const apr = (farmerNewBalance.div(farmerOldBalance).sub(1)).mul(24 / ((blocksPerHour * hours) / 300)).mul(365);
       const apy = ((farmerNewBalance.div(farmerOldBalance).sub(1)).mul(24 / ((blocksPerHour * hours) / 300)).add(1)).pow(365);
 

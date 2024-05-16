@@ -3,10 +3,23 @@ import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-network-helpers";
 import "@nomicfoundation/hardhat-ethers";
 import "@nomicfoundation/hardhat-verify";
-import "hardhat-tracer"
+import "hardhat-tracer";
 import "hardhat-ethernal";
 
-import keys from './dev-keys.json';
+import keys from "./dev-keys.json";
+import { EthernalConfig } from "hardhat-ethernal/dist/types";
+
+const ethernalConfig: EthernalConfig = {
+  apiToken: keys.ethernalApiKey,
+  resetOnStart: "Hardhat Local Network",
+  workspace: "Hardhat Local Network",
+  disableSync: false,
+  disableTrace: true,
+  skipFirstBlock: false,
+  verbose: true,
+  disabled: false,
+  uploadAst: false
+};
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -18,9 +31,9 @@ const config: HardhatUserConfig = {
             enabled: true,
             runs: 200,
           },
-        }
-      }
-    ]
+        },
+      },
+    ],
   },
   networks: {
     hardhat: {
@@ -36,31 +49,7 @@ const config: HardhatUserConfig = {
   mocha: {
     timeout: 100000000,
   },
-  // @ts-ignore
-  ethernal: {
-    apiToken: keys.ethernalApiKey,
-    resetOnStart: "Hardhat Local Network",
-    workspace: "Hardhat Local Network",
-    disableSync: false,
-    disableTrace: true,
-    skipFirstBlock: false,
-    verbose: true
-  }
+  ethernal: ethernalConfig
 };
-
-// export interface EthernalConfig {
-//   disableSync: boolean;
-//   disableTrace: boolean;
-//   workspace?: string;
-//   uploadAst: boolean;
-//   disabled: boolean;
-//   resetOnStart?: string;
-//   email?: string;
-//   password?: string;
-//   serverSync?: boolean;
-//   apiToken?: string;
-//   skipFirstBlock?: boolean;
-//   verbose?: boolean;
-// }
 
 export default config;

@@ -1,17 +1,12 @@
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
-import helpers from "@nomicfoundation/hardhat-network-helpers";
 import hre from "hardhat";
 import {
-  CompoundStrategyMainnet_WETH,
-  CompoundStrategyMainnet_WETH__factory,
   Controller,
   ConvexStrategyMainnet_3CRV,
   ConvexStrategyMainnet_3CRV__factory,
   IBooster__factory,
   IERC20,
   IERC20__factory,
-  IdleStrategyMainnet_DAI,
-  IdleStrategyMainnet_DAI__factory,
   VaultV1,
   VaultV2__factory,
 } from "../../typechain-types";
@@ -23,9 +18,6 @@ import { BigDecimal } from "../../lib/bignumber";
 const ethers = hre.ethers;
 
 const WETH = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
-const CRV = "0xD533a949740bb3306d119CC777fa900bA034cd52";
-const CVX = "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B";
-const USDC = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
 const WHALE = "0xD2c828D44e4331defE8b9ED949ADAF187f1dc85E";
 const FARM = "0xa0246c9032bC3A600820415aE600c6388619A14D";
 const IFARM = "0x1571eD0bed4D987fe2b498DdBaE7DFA19519F651";
@@ -37,10 +29,6 @@ describe("Mainnet Convex 3CRV", () => {
   let underlying: IERC20;
 
   let underlyingWhale: HardhatEthersSigner;
-  let crv: IERC20;
-  let cvx: IERC20;
-  let usdc: IERC20
-  let weth: IERC20;
 
   let governance: HardhatEthersSigner;
   let farmer1: HardhatEthersSigner;
@@ -53,10 +41,6 @@ describe("Mainnet Convex 3CRV", () => {
 
   const setupExternalContracts = async () => {
     underlying = IERC20__factory.connect(UNDERLYING, accounts[10]);
-    weth = IERC20__factory.connect(WETH, accounts[10]);
-    crv = IERC20__factory.connect(CRV, accounts[10]);
-    cvx = IERC20__factory.connect(CVX, accounts[10]);
-    usdc = IERC20__factory.connect(USDC, accounts[10]);
   };
 
   const setupBalance = async () => {
@@ -111,7 +95,7 @@ describe("Mainnet Convex 3CRV", () => {
 
   describe("Happy path", () => {
     it("Farmer should earn money", async () => {
-      let farmerOldBalance = new BigDecimal(ethers.formatEther(await underlying.balanceOf(farmer1.address)));
+      const farmerOldBalance = new BigDecimal(ethers.formatEther(await underlying.balanceOf(farmer1.address)));
       await depositToVault(farmer1, underlying, vault, farmerBalance);
       let fTokenBalance = await vault.balanceOf(farmer1.address);
 
@@ -146,7 +130,7 @@ describe("Mainnet Convex 3CRV", () => {
       }
       fTokenBalance = await vault.balanceOf(farmer1);
       await vault.connect(farmer1).withdraw(fTokenBalance);
-      let farmerNewBalance = new BigDecimal(ethers.formatEther(await underlying.balanceOf(farmer1)));
+      const farmerNewBalance = new BigDecimal(ethers.formatEther(await underlying.balanceOf(farmer1)));
       const apr = (farmerNewBalance.div(farmerOldBalance).sub(1)).mul(24 / ((blocksPerHour * hours) / 300)).mul(365);
       const apy = ((farmerNewBalance.div(farmerOldBalance).sub(1)).mul(24 / ((blocksPerHour * hours) / 300)).add(1)).pow(365);
 
