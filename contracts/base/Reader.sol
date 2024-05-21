@@ -76,4 +76,22 @@ contract Reader {
         }
         return result;
     }
+
+    function totalSupplies(address[] memory vaults) public view returns (uint256[] memory) {
+        uint256[] memory result = new uint256[](vaults.length);
+        for (uint256 i = 0; i < vaults.length; i++) {
+            result[i] = IERC20(vaults[i]).totalSupply();
+        }
+        return result;
+    }
+
+    function underlyingBalancesWithInvestment(
+        address[] memory vaults
+    ) public view returns (uint256[] memory) {
+        uint256[] memory result = new uint256[](vaults.length);
+        for (uint256 i = 0; i < vaults.length; i++) {
+            result[i] = IVault(vaults[i]).underlyingBalanceWithInvestment();
+        }
+        return result;
+    }
 }
