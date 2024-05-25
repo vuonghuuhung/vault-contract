@@ -168,7 +168,7 @@ contract CompoundStrategy is BaseUpgradeableStrategy {
             emit ProfitsNotCollected(sell(), false);
             return;
         }
-        address _rewardToken = rewardToken();
+        address _rewardToken = rewardToken(); 
         uint256 rewardBalance = IERC20(_rewardToken).balanceOf(address(this));
         uint256 _pendingFee = pendingFee();
         uint256 convertedFee;

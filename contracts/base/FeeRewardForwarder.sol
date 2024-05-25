@@ -64,11 +64,11 @@ contract FeeRewardForwarder is IFeeRewardForwarderV6, Governable {
         universalLiquidatorRegistry = _universalLiquidatorRegistry;
 
         // pre-existing settings
-        storedLiquidationPaths[sushi][farm] = [sushi, weth, farm];
-        storedLiquidationDexes[sushi][farm] = [sushiDex, uniDex];
+        // storedLiquidationPaths[sushi][farm] = [sushi, weth, farm];
+        // storedLiquidationDexes[sushi][farm] = [sushiDex, uniDex];
 
-        storedLiquidationPaths[mis][farm] = [mis, usdt, farm];
-        storedLiquidationDexes[mis][farm] = [sushiDex, uniDex];
+        // storedLiquidationPaths[mis][farm] = [mis, usdt, farm];
+        // storedLiquidationDexes[mis][farm] = [sushiDex, uniDex];
     }
 
     /*
@@ -96,7 +96,7 @@ contract FeeRewardForwarder is IFeeRewardForwarderV6, Governable {
                 profitSharingPool,
                 _amount
             );
-            IRewardPool(profitSharingPool).notifyRewardAmount(_amount);
+            IRewardPool(profitSharingPool).notifyRewardAmount(_amount); // just sen to a profit sharing pool -> do nothing
         } else {
             // we need to convert _token to FARM
             // note that we removed the check "if liquidation path exists".
@@ -114,7 +114,7 @@ contract FeeRewardForwarder is IFeeRewardForwarderV6, Governable {
                 address(this)
             );
             IERC20(farm).safeTransfer(profitSharingPool, convertedRewardAmount);
-            IRewardPool(profitSharingPool).notifyRewardAmount(
+            IRewardPool(profitSharingPool).notifyRewardAmount( // just sent to a profit sharing pool -> do nothing
                 convertedRewardAmount
             );
         }

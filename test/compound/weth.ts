@@ -20,6 +20,7 @@ const WETH = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
 const WHALE = "0x8EB8a3b98659Cce290402893d0123abb75E3ab28";
 const FARM = "0xa0246c9032bC3A600820415aE600c6388619A14D";
 const IFARM = "0x1571eD0bed4D987fe2b498DdBaE7DFA19519F651";
+const USDC = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
 
 describe("Mainnet Compound WETH", () => {
   let accounts: HardhatEthersSigner[];
@@ -74,7 +75,7 @@ describe("Mainnet Compound WETH", () => {
       {
         vaultImplementation: vaultImplementation.target,
         underlyingAddress: WETH,
-        FARMToken: FARM,
+        FARMToken: USDC,
         IFARMToken: IFARM,
         WETHToken: WETH,
         liquidation: liquidations,

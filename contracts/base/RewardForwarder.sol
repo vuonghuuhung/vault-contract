@@ -19,6 +19,7 @@ import "./inheritance/Controllable.sol";
 contract RewardForwarder is Controllable {
     using SafeERC20 for IERC20;
 
+    // TODO: change this to usdc 
     address public constant FARM = address(0xa0246c9032bC3A600820415aE600c6388619A14D);
 
     constructor(
@@ -52,9 +53,9 @@ contract RewardForwarder is Controllable {
         require(totalTransferAmount > 0, "totalTransferAmount should not be 0");
         IERC20(_token).safeTransferFrom(msg.sender, address(this), totalTransferAmount);
 
-        address _targetToken = IController(_controller).targetToken();
+        address _targetToken = IController(_controller).targetToken(); // WETH
 
-        if (_token != _targetToken) {
+        if (_token != _targetToken) { 
             IERC20(_token).forceApprove(liquidator, 0);
             IERC20(_token).forceApprove(liquidator, _platformFee);
 

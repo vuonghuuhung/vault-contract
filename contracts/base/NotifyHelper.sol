@@ -83,7 +83,7 @@ contract NotifyHelper is Controllable {
     function notifyProfitSharing() public {
         require(
             IERC20(farm).balanceOf(address(this)) >= profitShareIncentiveDaily,
-            "Balance too low"
+                "Balance too low"
         );
         require(
             !(lastProfitShareTimestamp + (24 hours) > block.timestamp),

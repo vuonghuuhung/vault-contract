@@ -8,6 +8,7 @@ import "../interface/IPoolFactory.sol";
 import "../../PotPool.sol";
 
 contract PotPoolFactory is OwnableWhitelist, IPoolFactory {
+    // TODO: do nothing here, cause dont use this token
     address public iFARM = 0x1571eD0bed4D987fe2b498DdBaE7DFA19519F651;
     uint256 public poolDefaultDuration = 604800; // 7 days
 
