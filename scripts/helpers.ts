@@ -1,5 +1,7 @@
 import hre from "hardhat";
-import { ERC20__factory } from "../typechain-types";
+import { ERC20__factory, VaultV1 } from "../typechain-types";
+import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
+import { BigNumberish } from "ethers";
 
 const ethers = hre.ethers;
 
@@ -24,4 +26,16 @@ export const getUnderlyingTokenBalance = async (
     symbol,
     balance: ethers.formatUnits(balance, decimals),
   };
+};
+
+export const depositToVault = async (
+  _farmer: HardhatEthersSigner,
+  _underlying: string,
+  _vault: VaultV1,
+  _amount: BigNumberish
+) => {
+  const underlying = ERC20__factory.connect(_underlying, ethers.provider);
+  const decimal = await underlying.decimals();
+  await underlying.connect(_farmer).approve(_vault.target, ethers.parseUnits(_amount.toString(), decimal));
+  await _vault.connect(_farmer).deposit(ethers.parseUnits(_amount.toString(), decimal));
 };

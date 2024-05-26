@@ -13,9 +13,9 @@ contract IdleStrategy is BaseUpgradeableStrategy {
     using SafeERC20 for IERC20;
 
     address public constant strategistAddress =
-        address(0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199); // account 19 in hardhat 
+        address(0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199); // account 19 in hardhat
     address public constant idleTokenHelper =
-        address(0x04Ce60ed10F6D2CfF3AA015fc7b950D13c113be5); 
+        address(0x04Ce60ed10F6D2CfF3AA015fc7b950D13c113be5);
 
     // additional storage slots (on top of BaseUpgradeableStrategy ones) are defined here
     bytes32 internal constant _IDLE_TOKEN_SLOT =
@@ -108,7 +108,9 @@ contract IdleStrategy is BaseUpgradeableStrategy {
         _setVirtualPrice(
             IdleTokenHelper(idleTokenHelper).getRedeemPrice(_idleToken)
         );
-        setProtected(false);
+        assembly {
+            sstore(_PROTECTED_SLOT, 0)
+        }
     }
 
     function currentSupplied() public view returns (uint256) {

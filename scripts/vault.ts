@@ -10,7 +10,7 @@ import {
   IdleStrategyMainnet_USDC__factory,
   IdleStrategyMainnet_USDT__factory,
   MegaFactory,
-  VaultV2__factory,
+  VaultV1__factory,
   YelStrategyMainnet_YEL_WETH__factory,
 } from "../typechain-types";
 import config from "./fork-mainnet-config";
@@ -102,16 +102,16 @@ export const prepareVault = async (megaFactory: MegaFactory) => {
       yelWETH.target
     );
 
-    const compoundVault = VaultV2__factory.connect((await megaFactory.completedDeployments("compound-weth")).NewVault, governance);
-    const convex3CRVVault = VaultV2__factory.connect((await megaFactory.completedDeployments("convex-3crv")).NewVault, governance);
-    const convexCrvUSDUSDVault = VaultV2__factory.connect((await megaFactory.completedDeployments("convex-crvusd-usdc")).NewVault, governance);
-    const convexCVXCRVVault = VaultV2__factory.connect((await megaFactory.completedDeployments("convex-cvxcrv")).NewVault, governance);
-    const convexOETHVault = VaultV2__factory.connect((await megaFactory.completedDeployments("convex-oeth")).NewVault, governance);
-    const convexSTETHVault = VaultV2__factory.connect((await megaFactory.completedDeployments("convex-steth")).NewVault, governance);
-    const idleDAIVault = VaultV2__factory.connect((await megaFactory.completedDeployments("idle-dai")).NewVault, governance);
-    const idleUSDCVault = VaultV2__factory.connect((await megaFactory.completedDeployments("idle-usdc")).NewVault, governance);
-    const idleUSDTVault = VaultV2__factory.connect((await megaFactory.completedDeployments("idle-usdt")).NewVault, governance);
-    const yelWETHVault = VaultV2__factory.connect((await megaFactory.completedDeployments("yel-weth")).NewVault, governance);
+    const compoundVault = VaultV1__factory.connect((await megaFactory.completedDeployments("compound-weth")).NewVault, governance);
+    const convex3CRVVault = VaultV1__factory.connect((await megaFactory.completedDeployments("convex-3crv")).NewVault, governance);
+    const convexCrvUSDUSDVault = VaultV1__factory.connect((await megaFactory.completedDeployments("convex-crvusd-usdc")).NewVault, governance);
+    const convexCVXCRVVault = VaultV1__factory.connect((await megaFactory.completedDeployments("convex-cvxcrv")).NewVault, governance);
+    const convexOETHVault = VaultV1__factory.connect((await megaFactory.completedDeployments("convex-oeth")).NewVault, governance);
+    const convexSTETHVault = VaultV1__factory.connect((await megaFactory.completedDeployments("convex-steth")).NewVault, governance);
+    const idleDAIVault = VaultV1__factory.connect((await megaFactory.completedDeployments("idle-dai")).NewVault, governance);
+    const idleUSDCVault = VaultV1__factory.connect((await megaFactory.completedDeployments("idle-usdc")).NewVault, governance);
+    const idleUSDTVault = VaultV1__factory.connect((await megaFactory.completedDeployments("idle-usdt")).NewVault, governance);
+    const yelWETHVault = VaultV1__factory.connect((await megaFactory.completedDeployments("yel-weth")).NewVault, governance);
 
     return {
       compoundVault,

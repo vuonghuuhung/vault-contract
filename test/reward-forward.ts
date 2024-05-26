@@ -13,7 +13,6 @@ import {
 import { BigNumberish } from "ethers";
 import { depositToVault, setUpCoreProtocol } from "./utilities/hardhat-utils";
 import { liquidations } from "./liquidation";
-import { BigDecimal } from "../lib/bignumber";
 
 const ethers = hre.ethers;
 
@@ -29,7 +28,6 @@ describe("Mainnet Idle USDT", () => {
   let underlying: IERC20;
 
   let underlyingWhale: HardhatEthersSigner;
-  let usdt: IERC20;
 
   let governance: HardhatEthersSigner;
   let farmer1: HardhatEthersSigner;
@@ -42,7 +40,6 @@ describe("Mainnet Idle USDT", () => {
 
   const setupExternalContracts = async () => {
     underlying = IERC20__factory.connect(USDT, accounts[10]);
-    usdt = IERC20__factory.connect(USDT, accounts[10]);
   };
 
   const setupBalance = async () => {
