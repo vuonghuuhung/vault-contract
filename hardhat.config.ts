@@ -41,6 +41,10 @@ const config: HardhatUserConfig = {
         url: "https://eth-mainnet.g.alchemy.com/v2/" + keys.alchemyKeyMainnet,
         blockNumber: 19819900,
       },
+      mining: {
+        auto: true,
+        interval: 2000,
+      },
     },
   },
   mocha: {
