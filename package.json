@@ -10,6 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "blockchain": "npx hardhat node",
     "deploy-contracts": "npx hardhat run scripts/deployment.ts --network localhost",
+    "run-idle-bot": "npx hardhat run scripts/bots/main.ts --network localhost",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix"
