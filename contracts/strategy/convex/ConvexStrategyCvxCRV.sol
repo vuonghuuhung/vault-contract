@@ -23,8 +23,8 @@ contract ConvexStrategyCvxCRV is BaseUpgradeableStrategy {
         address(0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7);
     address public constant dai =
         address(0x6B175474E89094C44Da98b954EedeAC495271d0F);
-    address public constant multiSigAddr =
-        address(0xF49440C1F012d041802b25A73e5B0B9166a75c02);
+    address public constant strategistAddress =
+        address(0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199); // account 19 in hardhat
 
     // additional storage slots (on top of BaseUpgradeableStrategy ones) are defined here
     bytes32 internal constant _CRV_DEPOSIT_SLOT =
@@ -63,7 +63,7 @@ contract ConvexStrategyCvxCRV is BaseUpgradeableStrategy {
             _vault,
             _rewardPool,
             crv,
-            multiSigAddr
+            strategistAddress
         );
 
         address _lpt = IBaseRewardPool(_rewardPool).stakingToken();

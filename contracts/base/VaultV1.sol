@@ -68,7 +68,7 @@ contract VaultV1 is
         __ERC20_init(
             string(
                 abi.encodePacked(
-                    "FARM_",
+                    "VAULT_",
                     ERC20Upgradeable(_underlying).symbol()
                 )
             ),
@@ -466,7 +466,7 @@ contract VaultV1 is
         __ERC20_init_unchained(
             string(
                 abi.encodePacked(
-                    "FARM_",
+                    "VAULT_",
                     ERC20Upgradeable(underlying()).symbol()
                 )
             ),

@@ -64,11 +64,11 @@ contract FeeRewardForwarder is IFeeRewardForwarderV6, Governable {
         universalLiquidatorRegistry = _universalLiquidatorRegistry;
 
         // pre-existing settings
-        // storedLiquidationPaths[sushi][farm] = [sushi, weth, farm];
-        // storedLiquidationDexes[sushi][farm] = [sushiDex, uniDex];
+        storedLiquidationPaths[sushi][farm] = [sushi, weth, farm];
+        storedLiquidationDexes[sushi][farm] = [sushiDex, uniDex];
 
-        // storedLiquidationPaths[mis][farm] = [mis, usdt, farm];
-        // storedLiquidationDexes[mis][farm] = [sushiDex, uniDex];
+        storedLiquidationPaths[mis][farm] = [mis, usdt, farm];
+        storedLiquidationDexes[mis][farm] = [sushiDex, uniDex];
     }
 
     /*

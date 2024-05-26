@@ -22,8 +22,8 @@ contract ConvexStrategy is BaseUpgradeableStrategy {
         address(0xF403C135812408BFbE8713b5A23a04b3D48AAE31);
     address public constant weth =
         address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    address public constant multiSigAddr =
-        address(0xF49440C1F012d041802b25A73e5B0B9166a75c02);
+    address public constant strategistAddress =
+        address(0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199); // account 19 in hardhat 
 
     // additional storage slots (on top of BaseUpgradeableStrategy ones) are defined here
     bytes32 internal constant _POOLID_SLOT =
@@ -104,7 +104,7 @@ contract ConvexStrategy is BaseUpgradeableStrategy {
             _vault,
             _rewardPool,
             weth,
-            multiSigAddr
+            strategistAddress
         );
 
         address _lpt;

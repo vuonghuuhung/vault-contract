@@ -20,7 +20,7 @@ contract RewardForwarder is Controllable {
     using SafeERC20 for IERC20;
 
     // TODO: change this to usdc 
-    address public constant FARM = address(0xa0246c9032bC3A600820415aE600c6388619A14D);
+    address public constant WETH = address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
 
     constructor(
         address _storage
@@ -74,7 +74,7 @@ contract RewardForwarder is Controllable {
             IERC20(_targetToken).safeTransfer(IController(_controller).protocolFeeReceiver(), _platformFee);
         }
 
-        if (_token != FARM) {
+        if (_token != WETH) {
             IERC20(_token).forceApprove(liquidator, 0);
             IERC20(_token).forceApprove(liquidator, _profitSharingFee + (_strategistFee));
 
@@ -83,7 +83,7 @@ contract RewardForwarder is Controllable {
             if (_profitSharingFee > 0) {
                 IUniversalLiquidator(liquidator).swap(
                     _token,
-                    FARM,
+                    WETH,
                     _profitSharingFee,
                     amountOutMin,
                     IController(_controller).profitSharingReceiver()
@@ -92,7 +92,7 @@ contract RewardForwarder is Controllable {
             if (_strategistFee > 0) {
                 IUniversalLiquidator(liquidator).swap(
                     _token,
-                    FARM,
+                    WETH,
                     _strategistFee,
                     amountOutMin,
                     IStrategy(msg.sender).strategist()
@@ -100,10 +100,10 @@ contract RewardForwarder is Controllable {
             }
         } else {
             if (_strategistFee > 0) {
-                IERC20(FARM).safeTransfer(IStrategy(msg.sender).strategist(), _strategistFee);
+                IERC20(WETH).safeTransfer(IStrategy(msg.sender).strategist(), _strategistFee);
             }
             if (_profitSharingFee > 0) {
-                IERC20(FARM).safeTransfer(IController(_controller).profitSharingReceiver(), _profitSharingFee);
+                IERC20(WETH).safeTransfer(IController(_controller).profitSharingReceiver(), _profitSharingFee);
             }
         }
     }

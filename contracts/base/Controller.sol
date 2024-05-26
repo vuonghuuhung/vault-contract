@@ -27,18 +27,18 @@ contract Controller is Governable {
 
     uint256 public nextImplementationDelay;
 
-    /// 15% of fees captured go to iFARM stakers
-    uint256 public profitSharingNumerator = 1000;
+    /// 0% of fees captured go to iFARM stakers
+    uint256 public profitSharingNumerator = 0;
     uint256 public nextProfitSharingNumerator = 0;
     uint256 public nextProfitSharingNumeratorTimestamp = 0;
 
     /// 5% of fees captured go to strategists
-    uint256 public strategistFeeNumerator = 0;
+    uint256 public strategistFeeNumerator = 500;
     uint256 public nextStrategistFeeNumerator = 0;
     uint256 public nextStrategistFeeNumeratorTimestamp = 0;
 
-    /// 5% of fees captured go to the devs of the platform
-    uint256 public platformFeeNumerator = 500;
+    /// 15% of fees captured go to the devs of the platform
+    uint256 public platformFeeNumerator = 1500;
     uint256 public nextPlatformFeeNumerator = 0;
     uint256 public nextPlatformFeeNumeratorTimestamp = 0;
 

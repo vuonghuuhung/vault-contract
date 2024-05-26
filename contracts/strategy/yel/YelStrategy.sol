@@ -15,8 +15,8 @@ contract YelStrategy is BaseUpgradeableStrategy {
 
     address public constant sushiswapRouterV2 =
         address(0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F);
-    address public constant multiSigAddr =
-        address(0xF49440C1F012d041802b25A73e5B0B9166a75c02);
+    address public constant strategistAddress =
+        address(0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199); // account 19 in hardhat
 
     // additional storage slots (on top of BaseUpgradeableStrategy ones) are defined here
     bytes32 internal constant _POOLID_SLOT =
@@ -38,14 +38,14 @@ contract YelStrategy is BaseUpgradeableStrategy {
         address _rewardPool,
         address _rewardToken,
         uint256 _poolID
-    ) public onlyInitializing() {
+    ) public onlyInitializing {
         BaseUpgradeableStrategy.initialize(
             _storage,
             _underlying,
             _vault,
             _rewardPool,
             _rewardToken,
-            multiSigAddr
+            strategistAddress
         );
 
         address _lpt;
@@ -259,9 +259,8 @@ contract YelStrategy is BaseUpgradeableStrategy {
         // The second part is needed because there is the emergency exit mechanism
         // which would break the assumption that all the funds are always inside of the reward pool
         return
-            rewardPoolBalance() + (
-                IERC20(underlying()).balanceOf(address(this))
-            );
+            rewardPoolBalance() +
+            (IERC20(underlying()).balanceOf(address(this)));
     }
 
     /*

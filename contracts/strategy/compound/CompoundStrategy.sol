@@ -12,8 +12,8 @@ import "../../base/interface/compound/ICometRewards.sol";
 contract CompoundStrategy is BaseUpgradeableStrategy {
     using SafeERC20 for IERC20;
 
-    address public constant harvestMSIG =
-        address(0xF49440C1F012d041802b25A73e5B0B9166a75c02);
+    address public constant strategistAddress =
+        address(0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199); // account 19 in hardhat
 
     // additional storage slots (on top of BaseUpgradeableStrategy ones) are defined here
     bytes32 internal constant _MARKET_SLOT =
@@ -52,7 +52,7 @@ contract CompoundStrategy is BaseUpgradeableStrategy {
             _vault,
             _rewardPool,
             _rewardToken,
-            harvestMSIG
+            strategistAddress
         );
 
         address _lpt = IComet(_market).baseToken();
@@ -168,7 +168,7 @@ contract CompoundStrategy is BaseUpgradeableStrategy {
             emit ProfitsNotCollected(sell(), false);
             return;
         }
-        address _rewardToken = rewardToken(); 
+        address _rewardToken = rewardToken();
         uint256 rewardBalance = IERC20(_rewardToken).balanceOf(address(this));
         uint256 _pendingFee = pendingFee();
         uint256 convertedFee;
