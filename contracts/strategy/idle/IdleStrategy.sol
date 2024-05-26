@@ -108,6 +108,7 @@ contract IdleStrategy is BaseUpgradeableStrategy {
         _setVirtualPrice(
             IdleTokenHelper(idleTokenHelper).getRedeemPrice(_idleToken)
         );
+        setProtected(false);
     }
 
     function currentSupplied() public view returns (uint256) {

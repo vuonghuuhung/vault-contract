@@ -96,7 +96,7 @@ describe("Mainnet Idle USDT", () => {
   describe("Happy path", () => {
     it("Farmer should earn money", async () => {
       await depositToVault(farmer1, underlying, vault, farmerBalance);
-      await strategy.connect(governance).setProtected(false);
+    //   await strategy.connect(governance).setProtected(false);
       const strategist = (await ethers.getSigners())[19]; 
 
       const weth = ERC20__factory.connect(WETH, governance);
