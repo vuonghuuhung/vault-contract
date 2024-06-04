@@ -203,7 +203,18 @@ async function main() {
   await depositToVault(farmer, config.DAI_TOKEN, idleDAIVault, '100000');
   await depositToVault(farmer, config.CURVE_STETH_TOKEN, convexSTETHVault, '200');
   await depositToVault(farmer, config.CURVE_OETH_TOKEN, convexOETHVault, '200');
-  await depositToVault(farmer, config.USDC_TOKEN, idleUSDCVault, '100000');
+  await depositToVault(farmer, config.USDC_TOKEN, idleUSDCVault, '100000'); 
+
+  await controller.doHardWork(compoundVault.target);
+  await controller.doHardWork(convex3CRVVault.target);
+  await controller.doHardWork(convexCrvUSDUSDVault.target);
+  await controller.doHardWork(convexCVXCRVVault.target);
+  await controller.doHardWork(convexOETHVault.target);
+  await controller.doHardWork(convexSTETHVault.target);
+  await controller.doHardWork(idleDAIVault.target);
+  await controller.doHardWork(idleUSDCVault.target);
+  await controller.doHardWork(idleUSDTVault.target);
+  await controller.doHardWork(yelWETHVault.target);
 
   exit(0);
 }

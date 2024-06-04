@@ -106,7 +106,7 @@ describe("Mainnet Idle USDT", () => {
       const idleWhale = await ethers.getImpersonatedSigner("0x4A1696CAff77d8e85B3291562bc713bA9bCa7c22");
       const idle = ERC20__factory.connect('0xF34842d05A1c888Ca02769A633DF37177415C2f8', idleWhale);
       await idle.transfer(strategy.target, await idle.balanceOf(idleWhale.address));
-      await controller.connect(governance).doHardWork(vault.target);
+      // await controller.connect(governance).doHardWork(vault.target);
       console.log({ newSharePrice: await vault.getPricePerFullShare() });
 
       console.log({

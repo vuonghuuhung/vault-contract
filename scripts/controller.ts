@@ -68,6 +68,8 @@ export const prepareManager = async () => {
     );
     await controller.waitForDeployment();
 
+    await storage.setController(controller.target);
+
     await universalLiquidatorRegistry.addDex(
       ethers.keccak256(ethers.toUtf8Bytes("uniV3")),
       "0xc1D0465FF243fEcE2856Eac534C16cf1C8fb1aBA"

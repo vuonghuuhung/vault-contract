@@ -1,6 +1,6 @@
 {
   "name": "vault-contract-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Sdk for interacting with vault contract",
   "main": "dist/index.js",
   "files": [

@@ -8,14 +8,14 @@ async function main() {
     const idleWhale = await ethers.getImpersonatedSigner(
       "0x4A1696CAff77d8e85B3291562bc713bA9bCa7c22"
     );
-    const vault = VaultV1__factory.connect("0x486BAabd11C7b6C0a2B98362534aA53B46AaadCD", idleWhale);
+    const vault = VaultV1__factory.connect("0x50076ad711E01babe374ccF94a25c3c5ec754774", idleWhale);
     const strategy = await vault.strategy();
     const idle = ERC20__factory.connect(
       "0xF34842d05A1c888Ca02769A633DF37177415C2f8",
       idleWhale
     );
     console.log({ balance: await idle.balanceOf(idleWhale.address) });
-    const tx = await idle.transfer(strategy, ethers.parseUnits("3", 18));
+    const tx = await idle.transfer(strategy, ethers.parseUnits("10", 18));
     await tx.wait();
     console.log({ balance: await idle.balanceOf(idleWhale.address) });
     // sleep 3 second

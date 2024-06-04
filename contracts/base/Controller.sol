@@ -76,6 +76,9 @@ contract Controller is Governable {
     event AddedCodeToWhitelist(address indexed _address);
     event RemovedCodeFromWhitelist(address indexed _address);
 
+    event AddedHardWorker(address indexed _address);
+    event RemovedHardWorker(address indexed _address);
+
     event SharePriceChangeLog(
         address indexed vault,
         address indexed strategy,
@@ -212,11 +215,13 @@ contract Controller is Governable {
     function addHardWorker(address _worker) public onlyGovernance {
         require(_worker != address(0), "_worker must be defined");
         hardWorkers[_worker] = true;
+        emit AddedHardWorker(_worker);
     }
 
     function removeHardWorker(address _worker) public onlyGovernance {
         require(_worker != address(0), "_worker must be defined");
         hardWorkers[_worker] = false;
+        emit RemovedHardWorker(_worker);
     }
 
     // transfers token in the controller contract to the governance
